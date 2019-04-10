@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.application.Application;
+import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.Group;
@@ -16,8 +17,8 @@ import javafx.scene.input.MouseEvent;
 import java.util.ArrayList;
 
 // Keyboard events
-public class Example4M extends Application 
-{
+public class Main extends Application{
+    float proportion =1f;
     public static void main(String[] args) 
     {
         launch(args);
@@ -26,7 +27,7 @@ public class Example4M extends Application
     @Override
     public void start(Stage theStage) 
     {
-        theStage.setTitle( "Click the Target!" );
+        theStage.setTitle( "Golpea la pelota" );
 
         Group root = new Group();
         Scene theScene = new Scene( root );
@@ -39,21 +40,32 @@ public class Example4M extends Application
 
         Circle targetData = new Circle(100,100,32);
         IntValue points = new IntValue(0);
+        Image bullseye = new Image( "sample/futbol.png" );
+        Image field = new Image( "sample/field.jpg" );
 
         theScene.setOnMouseClicked(
             new EventHandler<MouseEvent>()
             {
-                public void handle(MouseEvent e)
-                {
+                public void handle(MouseEvent e) {
                     if ( targetData.containsPoint( e.getX(), e.getY() ) )
                     {
-                        double x = 50 + 400 * Math.random(); 
-                        double y = 50 + 400 * Math.random();
+                        float x = (float) (50 + 400 * Math.random());
+                        float y = (float) (50 + 400 * Math.random());
                         targetData.setCenter(x,y);
                         points.value++;
+
+                        if(points.value==5){
+                            proportion =0.5f;
+                            targetData.setRadius(targetData.getRadius()*proportion);
+                        }
+
                     }
-                    else
+                    else {
+                        proportion = 1;
                         points.value = 0;
+                        targetData.setInitialRadius();
+                    }
+
                 }
             });
 
@@ -64,23 +76,23 @@ public class Example4M extends Application
         gc.setStroke( Color.BLACK );
         gc.setLineWidth(1);
 
-        Image bullseye = new Image( "sample/bullseye.png" );
 
         new AnimationTimer()
         {
             public void handle(long currentNanoTime)
             {
                 // Clear the canvas
-                gc.setFill( new Color(0.85, 0.85, 1.0, 1.0) );
+                gc.setFill(new ImagePattern(field));
                 gc.fillRect(0,0, 512,512);
+
 
                 gc.drawImage( bullseye, 
                     targetData.getX() - targetData.getRadius(),
-                    targetData.getY() - targetData.getRadius() );
+                    targetData.getY() - targetData.getRadius(),bullseye.getWidth()*proportion,bullseye.getHeight()*proportion );
 
                 gc.setFill( Color.BLUE );
 
-                String pointsText = "Points: " + points.value;
+                String pointsText = "Goals: " + points.value;
                 gc.fillText( pointsText, 360, 36 );
                 gc.strokeText( pointsText, 360, 36 );
             }

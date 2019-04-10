@@ -6,11 +6,13 @@ public class Circle
 {
     private Point2D center;
     private double  radius;
+    private double initialRadius;
 
     public Circle(double x, double y, double r)
     {
         setCenter(x,y);
         setRadius(r);
+        this.initialRadius = r;
     }
     
     public void setCenter(double x, double y)
@@ -21,6 +23,10 @@ public class Circle
     public void setRadius(double r)
     {  
         radius = r;  
+    }
+
+    public void setInitialRadius(){
+        this.radius = this.initialRadius;
     }
     
     public double getX()
