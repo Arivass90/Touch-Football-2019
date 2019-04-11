@@ -18,32 +18,44 @@ import java.util.ArrayList;
 
 // Keyboard events
 public class Main extends Application{
+
     float proportion =1f;
+    KTimer time = new KTimer();
+    final String[] secondsFinal = new String[1];
+    Circle targetData = new Circle(100,100,32);
+    IntValue points = new IntValue(0);
+    Canvas canvas = new Canvas( 500, 500 );
+    GraphicsContext gc = canvas.getGraphicsContext2D();
+    boolean gameOver = false;
+
     public static void main(String[] args) 
     {
         launch(args);
     }
 
+
     @Override
     public void start(Stage theStage) 
     {
         theStage.setTitle( "Golpea la pelota" );
-
         Group root = new Group();
         Scene theScene = new Scene( root );
         theStage.setScene( theScene );
 
-        Canvas canvas = new Canvas( 500, 500 );
-        //Image restart = new Image("restart.png");
+//        Scene menu = new Scene( root );
+//        theStage.setScene(menu);
 
         root.getChildren().add( canvas );
 
-        Circle targetData = new Circle(100,100,32);
-        IntValue points = new IntValue(0);
-        Image bullseye = new Image( "sample/futbol.png" );
+        final Image[] ball = {new Image("sample/futbol.png")};
         Image field = new Image( "sample/field.jpg" );
-//
+
+//iniciamos el contador
+        time.startTimer(10);
+
+        // cuando hacemos click
         theScene.setOnMouseClicked(
+
             new EventHandler<MouseEvent>()
             {
                 public void handle(MouseEvent e) {
@@ -61,20 +73,23 @@ public class Main extends Application{
 
                     }
                     else {
-                        proportion = 1;
-                        points.value = 0;
-                        targetData.setInitialRadius();
+                       gameOver();
+
                     }
 
                 }
             });
 
-        GraphicsContext gc = canvas.getGraphicsContext2D();
 
+// CREAMOS LA FUENTE
         Font theFont = Font.font( "Helvetica", FontWeight.BOLD, 24 );
+
         gc.setFont( theFont );
         gc.setStroke( Color.BLACK );
         gc.setLineWidth(1);
+
+
+////
 
 
         new AnimationTimer()
@@ -86,19 +101,70 @@ public class Main extends Application{
                 gc.fillRect(0,0, 512,512);
 
 
-                gc.drawImage( bullseye, 
+                gc.drawImage(ball[0],
                     targetData.getX() - targetData.getRadius(),
-                    targetData.getY() - targetData.getRadius(),bullseye.getWidth()*proportion,bullseye.getHeight()*proportion );
+                    targetData.getY() - targetData.getRadius(), ball[0].getWidth()*proportion, ball[0].getHeight()*proportion );
 
                 gc.setFill( Color.BLUE );
 
+
                 String pointsText = "Goals: " + points.value;
-                gc.fillText( pointsText, 360, 36 );
-                gc.strokeText( pointsText, 360, 36 );
+                gc.fillText( pointsText, 320, 36 );
+                gc.strokeText( pointsText, 320, 36 );
+
+                String timeText = "Time: + "+ time.getTime();
+                gc.fillText(timeText,250,60 );
+                gc.strokeText(timeText,250,60);
+
+                if(gameOver){
+
+                String textGameOver = "GAME OVER";
+                    gc.fillText(textGameOver,50,300);
+                    gc.strokeText(textGameOver,50,300);
+
+                    delay();
+
+                String timeFinal = "Tu tiempo final ha sido de "+ secondsFinal[0];
+                gc.fillText(timeFinal,20,260);
+                gc.strokeText(timeFinal,20,260);
+
+                }
             }
         }.start();
 
 
         theStage.show();
     }
+
+    public void gameOver(){
+
+        gameOver=true;
+        long milisFinal = 0;
+        milisFinal=time.getTime();
+        secondsFinal[0] =time.milisToSecond(milisFinal);
+        System.out.println("tu tiempo es de "+ secondsFinal[0]);
+        time.stopTimer();
+        time.startTimer(10);
+        proportion = 1;
+        points.value = 0;
+        targetData.setInitialRadius();
+        time.stopTimer();
+
+
+    }
+
+    public void iniciar(Stage theStage){
+        start(theStage);
+
+    }
+
+    private static void delay()
+    {
+        try
+        {
+            Thread.sleep(2000);
+        }catch(InterruptedException e){}
+    }
+
+
 }

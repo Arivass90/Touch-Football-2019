@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Menu">
+    <children>
+        <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@wallpaper.jpeg" />
+            </image>
+        </ImageView>
+        <Button layoutX="226.0" layoutY="159.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="143.0" text="START" textAlignment="CENTER">
+            <font>
+                <Font name="Britannic Bold" size="15.0" />
+            </font>
+        </Button>
+        <Label alignment="TOP_CENTER" layoutX="-2.0" layoutY="52.0" prefHeight="43.0" prefWidth="600.0" text="TOUCH FOOTBALL 2019" textAlignment="CENTER" textFill="#4dff00" underline="true">
+            <effect>
+                <Bloom />
+            </effect>
+            <font>
+                <Font name="Bookman Old Style Bold" size="42.0" />
+            </font>
+        </Label>
+        <Button layoutX="226.0" layoutY="221.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="143.0" text="EXIT" textAlignment="CENTER">
+            <font>
+                <Font name="Britannic Bold" size="15.0" />
+            </font>
+        </Button>
+    </children>
+</AnchorPane>
