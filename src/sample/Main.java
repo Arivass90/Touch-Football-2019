@@ -42,7 +42,7 @@ public class Main extends Application{
         IntValue points = new IntValue(0);
         Image bullseye = new Image( "sample/futbol.png" );
         Image field = new Image( "sample/field.jpg" );
-
+//
         theScene.setOnMouseClicked(
             new EventHandler<MouseEvent>()
             {
