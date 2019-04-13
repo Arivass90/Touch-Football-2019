@@ -29,14 +29,11 @@ public class ControllerGame implements Initializable {
     float proportion = 1f;
     KTimer time = new KTimer();
     final String[] secondsFinal = new String[1];
-    Circle targetData = new Circle(100, 100, 32);
+    Circle targetData = new Circle(306, 200, 32);
     IntValue points = new IntValue(0);
     Stage stage;
     AnimationTimer timer;
-
-
     GraphicsContext gc;
-    boolean gameOver = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -49,30 +46,40 @@ public class ControllerGame implements Initializable {
         final Image[] ball = {new Image("sample/futbol.png")};
         Image field = new Image("sample/field.jpg");
 
-//iniciamos el contador
-        time.startTimer(10);
-
 
         // cuando hacemos click
         stage.getScene().setOnMouseClicked(
 
                 new EventHandler<MouseEvent>() {
                     public void handle(MouseEvent e) {
-                        System.out.println(2);
+
+
                         if (targetData.containsPoint(e.getX(), e.getY())) {
-                            float x = (float) (50 + 400 * Math.random());
-                            float y = (float) (50 + 400 * Math.random());
+                            float x = (float) (50 + 306 * Math.random());
+                            float y = (float) (50 + 200 * Math.random());
                             targetData.setCenter(x, y);
                             points.value++;
 
-                            if (points.value == 5) {
+                            if (points.value == 1) {
+                                time.startTimer(10);
+                            }
+
+                            if (points.value == 10) {
                                 proportion = 0.5f;
+                                targetData.setRadius(targetData.getRadius() * proportion);
+                            }
+                            if (points.value == 20) {
+                                proportion = 0.4f;
                                 targetData.setRadius(targetData.getRadius() * proportion);
                             }
 
                         } else {
                             try {
                                 gameOver();
+                            }
+
+                             catch (InterruptedException e1) {
+                                e1.printStackTrace();
                             } catch (IOException e1) {
                                 e1.printStackTrace();
                             }
@@ -91,15 +98,11 @@ public class ControllerGame implements Initializable {
         gc.setLineWidth(1);
 
 
-////
-
-
         timer = new AnimationTimer() {
             public void handle(long currentNanoTime) {
                 // Clear the canvas
                 gc.setFill(new ImagePattern(field));
                 gc.fillRect(0, 0, 612, 400);
-
 
                 gc.drawImage(ball[0],
                         targetData.getX() - targetData.getRadius(),
@@ -107,70 +110,82 @@ public class ControllerGame implements Initializable {
 
                 gc.setFill(Color.BLUE);
 
-
                 String pointsText = "Goals: " + points.value;
-                gc.fillText(pointsText, 320, 36);
-                gc.strokeText(pointsText, 320, 36);
+                gc.fillText(pointsText, 460, 35);
+                gc.strokeText(pointsText, 460, 35);
 
                 String timeText = "Time: + " + time.getTime();
-                gc.fillText(timeText, 250, 60);
-                gc.strokeText(timeText, 250, 60);
+                gc.fillText(timeText, 60, 35);
+                gc.strokeText(timeText, 60, 35);
 
-                if (gameOver) {
-
-                    String textGameOver = "GAME OVER";
-                    gc.fillText(textGameOver, 50, 300);
-                    gc.strokeText(textGameOver, 50, 300);
-
-                    delay();
-
-                    String timeFinal = "Tu tiempo final ha sido de " + secondsFinal[0];
-                    gc.fillText(timeFinal, 20, 260);
-                    gc.strokeText(timeFinal, 20, 260);
-
-                }
             }
         };
         timer.start();
 
-
         stage.show();
+
     }
 
-    public void gameOver() throws IOException {
+    public void gameOver() throws IOException, InterruptedException {
 
-        gameOver = true;
         long milisFinal = 0;
         milisFinal = time.getTime();
         secondsFinal[0] = time.milisToSecond(milisFinal);
-        System.out.println("tu tiempo es de " + secondsFinal[0]);
+
+        gc.setFill(Color.RED);
+
+        String textGameOver = "GAME OVER";
+        gc.fillText(textGameOver, 232, 205);
+        gc.strokeText(textGameOver, 232, 205);
+
+        String timeFinal = "Tu tiempo ha sido de: " + secondsFinal[0];
+        gc.fillText(timeFinal, 100, 250);
+        gc.strokeText(timeFinal, 100, 250);
+
+        String pointsFinal = "Tu numero de toques ha sido de: " + points.value;
+        gc.fillText(pointsFinal, 100, 290);
+        gc.strokeText(pointsFinal, 100, 290);
+
+        System.out.println("Tu tiempo ha sido de: " + secondsFinal[0]);
+        System.out.println("Tu numero de toques ha sido de: " + points.value);
+
         time.stopTimer();
         time.startTimer(10);
         proportion = 1;
         points.value = 0;
         targetData.setInitialRadius();
         time.stopTimer();
-        delay();
         timer.stop();
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("menu.fxml"));
 
-        Parent rootMenu = loader.load();
-        Scene menu = new Scene( rootMenu );
-        ControllerMenu controllerMenu = loader.getController();
+        stage.getScene().setOnMouseClicked(
+
+                new EventHandler<MouseEvent>() {
+                    public void handle(MouseEvent e) {
+
+                        try {
+                            reset();
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                });
+
+    }
+
+
+    public void reset() throws IOException, InterruptedException {
+
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("menu.fxml"));
+
+    Parent rootMenu = loader.load();
+    Scene menu = new Scene( rootMenu );
+    ControllerMenu controllerMenu = loader.getController();
         controllerMenu.setScene(menu, stage);
 
         stage.setScene(menu);
-
-
     }
-
-    private static void delay() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-        }
-    }
-
 
 }
