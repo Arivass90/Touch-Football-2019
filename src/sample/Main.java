@@ -40,7 +40,7 @@ public class Main extends Application{
         controllerMenu.setScene(menu, theStage);
 
         theStage.setScene( menu );
-        theStage.setTitle( "Golpea la pelota" );
+        theStage.setTitle( "Touch Football 2019" );
 
 
         theStage.show();

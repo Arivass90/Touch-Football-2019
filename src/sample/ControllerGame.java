@@ -68,17 +68,20 @@ public class ControllerGame implements Initializable {
                                 proportion = 0.5f;
                                 targetData.setRadius(targetData.getRadius() * proportion);
                             }
+
                             if (points.value == 20) {
-                                proportion = 0.4f;
+                                proportion = 0.3f;
+                                targetData.setInitialRadius();
                                 targetData.setRadius(targetData.getRadius() * proportion);
                             }
+
 
                         } else {
                             try {
                                 gameOver();
                             }
 
-                             catch (InterruptedException e1) {
+                            catch (InterruptedException e1) {
                                 e1.printStackTrace();
                             } catch (IOException e1) {
                                 e1.printStackTrace();
@@ -178,11 +181,11 @@ public class ControllerGame implements Initializable {
 
     public void reset() throws IOException, InterruptedException {
 
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("menu.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("menu.fxml"));
 
-    Parent rootMenu = loader.load();
-    Scene menu = new Scene( rootMenu );
-    ControllerMenu controllerMenu = loader.getController();
+        Parent rootMenu = loader.load();
+        Scene menu = new Scene( rootMenu );
+        ControllerMenu controllerMenu = loader.getController();
         controllerMenu.setScene(menu, stage);
 
         stage.setScene(menu);
